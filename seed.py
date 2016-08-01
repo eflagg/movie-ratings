@@ -51,8 +51,14 @@ def load_movies():
         released_at = row[2]
         imdb_url = row[4]
 
-        released_at = datetime.strptime(released_at, '%d-%m-%Y')
-        print released_at
+        if released_at:
+            released_at = datetime.strptime(released_at, '%d-%b-%Y')
+        else:
+            released_at = None
+
+        title = title.split()
+        title = title[:-1]
+        title = " ".join(title)
 
         movie = Movie(movie_id=movie_id,
                     title=title,
@@ -78,7 +84,7 @@ def load_ratings():
     # Read u.data file and insert data
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, movie_id, score, timestamp = row.split("|")
+        user_id, movie_id, score, timestamp = row.split("\t")
 
         rating = Rating(user_id=user_id,
                     movie_id=movie_id,
