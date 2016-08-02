@@ -23,6 +23,11 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    # ratings = db.relationship("Rating")
+                                # backref=db.backref("users",
+                                # order_by=user_id))
+
+
     def __repr__(self):
         """Provide helpful representation when printed."""
 
@@ -39,6 +44,10 @@ class Movie(db.Model):
     title = db.Column(db.String(200), nullable=False)
     released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(500), nullable=True)
+
+    # ratings = db.relationship("Rating")
+                                # backref=db.backref("movies",
+                                    # order_by=movie_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
