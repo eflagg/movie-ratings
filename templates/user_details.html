@@ -6,7 +6,11 @@
     <p>Age: {{ user.age }}</p>
     <p>Zipcode: {{ user.zipcode }}</p>
     <p>User Ratings: 
-     
+      <ul>
+        {% for rating in user.ratings %}
+          <li>{{ rating.movie.title }}: {{ rating.score }}</li>
+        {% endfor %}
+      </ul> 
     </p>
 
 {% endblock %}

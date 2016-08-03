@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session, url_for)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -28,11 +28,13 @@ def index():
 
     return render_template("homepage.html")
 
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
 
     users = User.query.all()
+
     return render_template("user_list.html", users=users)
 
 
@@ -68,7 +70,7 @@ def process_registration():
         session['current_user'] = email
         flash("Logged in as %s" % email)
 
-    return redirect("/")
+    return redirect(url_for("show_user_details", user_id=new_user.user_id))
 
 
 @app.route("/login")
@@ -90,10 +92,14 @@ def process_login():
     if user.password == password:
         session['current_user'] = email
         flash("Logged in as %s" % email)
-        return redirect("/")
+
+        return redirect(url_for("show_user_details", user_id=user.user_id))
+    
     else:
         flash("Wrong password!")
+
         return redirect("/login")
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
