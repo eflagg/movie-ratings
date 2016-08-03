@@ -101,6 +101,24 @@ def process_login():
         return redirect("/login")
 
 
+@app.route("/movies")
+def show_movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.order_by(Movie.title).all()
+
+    return render_template("movie_list.html", movies=movies)
+
+@app.route("/movies/<int:movie_id>")
+def show_movie_details(movie_id):
+    """Show movie details."""
+
+    movie = Movie.query.get(movie_id)
+
+    return render_template("movie_details.html", movie=movie)
+
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
