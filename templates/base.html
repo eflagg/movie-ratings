@@ -6,11 +6,14 @@
     {% for message in get_flashed_messages() %}
         <li>{{ message }}</li>
     {% endfor %}
-   </ul> 
+  </ul> 
 </head>
 
 <body>
-  Ratings
+  Ratings<br>
+  <form action="/logout">
+  <input type="submit" value="Log out"></input>
+  </form>
   <hr>
 
   {% block content %} put your content here {% endblock %}

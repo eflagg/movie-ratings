@@ -101,6 +101,16 @@ def process_login():
         return redirect("/login")
 
 
+@app.route("/logout")
+def process_logout():
+    """Log user out of session"""
+
+    session.pop('current_user', None)
+    flash("Successfully logged out.")
+
+    return redirect('/')
+
+
 @app.route("/movies")
 def show_movie_list():
     """Show list of movies."""
@@ -116,7 +126,6 @@ def show_movie_details(movie_id):
     movie = Movie.query.get(movie_id)
 
     return render_template("movie_details.html", movie=movie)
-
 
 
 if __name__ == "__main__":
