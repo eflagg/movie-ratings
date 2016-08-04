@@ -128,6 +128,33 @@ def show_movie_details(movie_id):
     return render_template("movie_details.html", movie=movie)
 
 
+@app.route("/movies/<int:movie_id>", methods=['POST'])
+def process_movie_rating(movie_id):
+    """ Add or update a movie id for a specific user """
+
+    movie = Movie.query.get(movie_id)
+
+    submitted_rating = request.form.get("rating")
+
+    user = User.query.filter_by(email=session['current_user']).first()
+    
+    if movie_id in [rating.movie.movie_id for rating in user.ratings]:
+        rating.score = submitted_rating
+        # // START HERE adding rating to incorrect rating_id
+        print "rating id", rating.rating_id
+        print "rating.score", rating.score
+    else:
+        new_rating = Rating(movie_id=movie_id, 
+                                user_id=user.user_id, score=submitted_rating)
+        db.session.add(new_rating)
+    
+    db.session.commit()
+
+    flash("Successfully rated this movie")
+        
+    return render_template("movie_details.html", movie=movie)    
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension

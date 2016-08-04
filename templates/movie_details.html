@@ -5,9 +5,9 @@
     
     <p>Release date: {{ movie.released_at }}</p>
     <p>IMDB URL: {{ movie.imdb_url }}</p>
-    <form action="/" method="POST">
+    <form action="/movies/{{ movie.movie_id }}" method="POST" id="rating-form">
       Rate this movie: <br>
-      <select>
+      <select name="rating">
         <option value=""></option>
         <option value="1">1</option>
         <option value="2">2</option>
@@ -15,6 +15,7 @@
         <option value="4">4</option>
         <option value="5">5</option>
       </select>
+      <input type="submit"></input>
      </form> 
     <p>Ratings: 
       <ul>
