@@ -58,21 +58,20 @@ class User(db.Model):
             rating for said movie"""
 
         other_ratings = movie.ratings
-        other_users = [ r.user for r in other_ratings ]
 
         similarities = [
-            (self.similarity(other_user), other_user)
-            for other_user in other_users
+            (self.similarity(rating.user), rating)
+            for rating in other_ratings
         ]
 
+        similarities = [(sim, r) for sim, r in similarities if sim > 0]
+
         similarities.sort(reverse=True)
-        sim, best_match_user = similarities[0]
+        
+        numerator = sum([r.score * sim for sim, r in similarities])
+        denominator = sum([sim for sim, r in similarities])
 
-        matched_rating = None
-        for rating in other_ratings:
-            if rating.user_id == best_match_user.user_id:
-
-                return rating.score * sim
+        return numerator / denominator
 
 
 # Put your Movie and Rating model classes here.

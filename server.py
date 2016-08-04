@@ -140,9 +140,7 @@ def process_movie_rating(movie_id):
     
     if movie_id in [rating.movie.movie_id for rating in user.ratings]:
         rating.score = submitted_rating
-        # // START HERE adding rating to incorrect rating_id
-        print "rating id", rating.rating_id
-        print "rating.score", rating.score
+    
     else:
         new_rating = Rating(movie_id=movie_id, 
                                 user_id=user.user_id, score=submitted_rating)
