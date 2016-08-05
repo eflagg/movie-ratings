@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>{{ movie.title }}</h2>
+    <h2>{{ parameter_dictionary.movie.title }}</h2>
     
-    <p>Release date: {{ movie.released_at }}</p>
-    <p>IMDB URL: {{ movie.imdb_url }}</p>
-    <form action="/movies/{{ movie.movie_id }}" method="POST" id="rating-form">
+    <p>Release date: {{ parameter_dictionary.movie.released_at }}</p>
+    <p>IMDB URL: {{ parameter_dictionary.movie.imdb_url }}</p>
+    <form action="/movies/{{ parameter_dictionary.movie.movie_id }}" method="POST" id="rating-form">
       Rate this movie: <br>
       <select name="rating">
         <option value=""></option>
@@ -16,10 +16,17 @@
         <option value="5">5</option>
       </select>
       <input type="submit"></input>
-     </form> 
+     </form>
+
+
+    <p>Average rating: {{ parameter_dictionary.average }}</p>
+    {% if parameter_dictionary.get('prediction') %}
+    <p>We predict you will rate this movie {{ parameter_dictionary.prediction }}.</p>
+    {% endif %}
+     
     <p>Ratings: 
       <ul>
-        {% for rating in movie.ratings %}
+        {% for rating in parameter_dictionary.movie.ratings %}
           <li>{{ rating.user.user_id }}: {{ rating.score }}</li>
         {% endfor %}
       </ul> 

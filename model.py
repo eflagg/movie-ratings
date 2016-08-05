@@ -67,6 +67,9 @@ class User(db.Model):
         similarities = [(sim, r) for sim, r in similarities if sim > 0]
 
         similarities.sort(reverse=True)
+
+        if not similarities:
+            return None
         
         numerator = sum([r.score * sim for sim, r in similarities])
         denominator = sum([sim for sim, r in similarities])

@@ -125,7 +125,35 @@ def show_movie_details(movie_id):
 
     movie = Movie.query.get(movie_id)
 
-    return render_template("movie_details.html", movie=movie)
+    user_email = session.get("current_user")
+
+    user = User.query.filter_by(email=user_email).first()
+
+    if user_email:
+        user_rating = Rating.query.filter_by(movie_id=movie_id,
+                        user_id=user.user_id).first()
+
+    else:    
+        user_rating = None
+
+    # Get average rating of movie
+
+    rating_scores = [r.score for r in movie.ratings]
+    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+    prediction = None
+
+    # Prediction code: only predict if the user hasn't rated it
+
+    if (not user_rating) and user.user_id:
+        prediction = user.predict_rating(movie)
+    print "prediction:", prediction
+
+    parameter_dictionary = {'movie': movie, 'average': avg_rating, 
+                            'prediction': prediction}
+
+    return render_template("movie_details.html", 
+                            parameter_dictionary=parameter_dictionary)
 
 
 @app.route("/movies/<int:movie_id>", methods=['POST'])
@@ -149,8 +177,12 @@ def process_movie_rating(movie_id):
     db.session.commit()
 
     flash("Successfully rated this movie")
-        
-    return render_template("movie_details.html", movie=movie)    
+
+    parameter_dictionary = {'movie': movie}
+
+    # Previously, we were rendering the movie_details.html, but Henry
+    # provided this solution to REDIRECT to the movies/movie_id route!
+    return redirect('/movies/{}'.format(movie_id))    
 
 
 if __name__ == "__main__":
