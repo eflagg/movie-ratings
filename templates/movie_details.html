@@ -4,7 +4,8 @@
     <h2>{{ parameter_dictionary.movie.title }}</h2>
     
     <p>Release date: {{ parameter_dictionary.movie.released_at }}</p>
-    <p>IMDB URL: {{ parameter_dictionary.movie.imdb_url }}</p>
+    <p>IMDB URL: {{ parameter_dictionary.movie.imdb_url }}</p><br>
+    <p>{{ parameter_dictionary.beratement }}</p>
     <form action="/movies/{{ parameter_dictionary.movie.movie_id }}" method="POST" id="rating-form">
       Rate this movie: <br>
       <select name="rating">
@@ -17,7 +18,6 @@
       </select>
       <input type="submit"></input>
      </form>
-
 
     <p>Average rating: {{ parameter_dictionary.average }}</p>
     {% if parameter_dictionary.get('prediction') %}

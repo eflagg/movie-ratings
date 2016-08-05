@@ -123,6 +123,16 @@ def show_movie_list():
 def show_movie_details(movie_id):
     """Show movie details."""
 
+    BERATEMENT_MESSAGES = [
+        "I suppose you don't have such bad taste after all.",
+        "I regret every decision that I've ever made that has " +
+            "brought me to listen to your opinion.",
+        "Words fail me, as your taste in movies has clearly " +
+            "failed you.",
+        "That movie is great. For a clown to watch. Idiot.",
+        "Words cannot express the awfulness of your taste."
+    ]
+
     movie = Movie.query.get(movie_id)
 
     user_email = session.get("current_user")
@@ -147,10 +157,43 @@ def show_movie_details(movie_id):
 
     if (not user_rating) and user.user_id:
         prediction = user.predict_rating(movie)
-    print "prediction:", prediction
+
+    if prediction:
+        effective_rating = prediction
+
+    elif user_rating:
+        effective_rating = user_rating.score
+
+    else:
+        effective_rating = None
+
+    the_eye = (User.query.filter_by(email="the-eye@of-judgment.com")
+                         .one())
+    eye_rating = Rating.query.filter_by(
+        user_id=the_eye.user_id, movie_id=movie.movie_id).first()
+
+    if eye_rating is None:
+        eye_rating = the_eye.predict_rating(movie)
+
+    else:
+        eye_rating = eye_rating.score
+
+    if eye_rating and effective_rating:
+        difference = abs(eye_rating - effective_rating)
+
+    else:
+        # We couldn't get an eye rating, so we'll skip difference
+        difference = None    
+
+    if difference is not None:
+        beratement = BERATEMENT_MESSAGES[int(difference)]
+
+    else:
+        beratement = None
 
     parameter_dictionary = {'movie': movie, 'average': avg_rating, 
-                            'prediction': prediction}
+                            'prediction': prediction, 
+                            'beratement': beratement}
 
     return render_template("movie_details.html", 
                             parameter_dictionary=parameter_dictionary)
